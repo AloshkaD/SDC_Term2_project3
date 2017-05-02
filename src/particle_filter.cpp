@@ -9,9 +9,12 @@
 #include <algorithm>
 #include <iostream>
 #include <numeric>
-
+#include <math.h>
+#include <stdio.h>
 #include "particle_filter.h"
+using namespace std;
 const double PI  =3.141592653589793238463;
+default_random_engine random_generator;
 
 void ParticleFilter::init(double x, double y, double theta, double std[]) {
 	// TODO: Set the number of particles. Initialize all particles to first position (based on estimates of 
@@ -47,16 +50,17 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	//  http://www.cplusplus.com/reference/random/default_random_engine/
 	
 
-	x_init = 102
-	y_init= 65
-	theta_init= (5*PI)/8
-	v=110
-	phai = PI/8
-	dt=0.1
-	div = v/ phai
-	x_f = x_init + div*(math.sin(theta_init + phai*dt)- math.sin(theta_init)) 
-	y_f = y_init + div*(math.cos(theta_init) - math.cos(theta_init + phai*dt)) 
-	phai_f = theta_init+phai*dt 
+	//x_init = 102
+	//y_init= 65
+	//theta_init= (5*PI)/8
+	//v=110
+	//phai = PI/8
+	//dt=0.1
+	
+	div = velocity/ yaw_rate;
+	x_f = x_init + div*(math.sin(theta_init + phai*dt)- math.sin(theta_init)); 
+	y_f = y_init + div*(math.cos(theta_init) - math.cos(theta_init + phai*dt)); 
+	phai_f = theta_init+phai*dt; 
 	
  
 }
