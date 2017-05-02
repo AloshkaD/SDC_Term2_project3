@@ -11,6 +11,7 @@
 #include <numeric>
 
 #include "particle_filter.h"
+const double PI  =3.141592653589793238463;
 
 void ParticleFilter::init(double x, double y, double theta, double std[]) {
 	// TODO: Set the number of particles. Initialize all particles to first position (based on estimates of 
@@ -44,7 +45,20 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	// NOTE: When adding noise you may find std::normal_distribution and std::default_random_engine useful.
 	//  http://en.cppreference.com/w/cpp/numeric/random/normal_distribution
 	//  http://www.cplusplus.com/reference/random/default_random_engine/
+	
 
+	x_init = 102
+	y_init= 65
+	theta_init= (5*PI)/8
+	v=110
+	phai = PI/8
+	dt=0.1
+	div = v/ phai
+	x_f = x_init + div*(math.sin(theta_init + phai*dt)- math.sin(theta_init)) 
+	y_f = y_init + div*(math.cos(theta_init) - math.cos(theta_init + phai*dt)) 
+	phai_f = theta_init+phai*dt 
+	
+ 
 }
 
 void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::vector<LandmarkObs>& observations) {
