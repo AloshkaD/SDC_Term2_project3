@@ -1,8 +1,5 @@
 /*
  * particle_filter.cpp
- *
- *  Created on: Dec 12, 2016
- *      Author: Tiffany Huang
  */
 
 #include <random>
@@ -14,33 +11,35 @@
 #include "particle_filter.h"
 using namespace std;
 const double PI  =3.141592653589793238463;
-default_random_engine random_generator;
+default_random_engine gen;
 
 void ParticleFilter::init(double x, double y, double theta, double std[]) {
 	// TODO: Set the number of particles. Initialize all particles to first position (based on estimates of 
 	//   x, y, theta and their uncertainties from GPS) and all weights to 1. 
 	// Add random Gaussian noise to each particle.
 	// NOTE: Consult particle_filter.h for more information about this method (and others in this file).
-    int m=4; // number of particles
+    const int m=100; // number of particles
 	x = 4983;
 	y = 5029;
 	theta = 1.201;
 	std_x = 2;
 	std_y = 2;
 	std_theta = 0.05;
-	default_random_engine gen;
-	normal_distribution<double> dist_x(x, std_x);
-	normal_distribution<double> dist_x(y, std_y);
-	normal_distribution<double> dist_x(theta, std_theta);
-    
-	for (int i = 0; i < 3; ++i){
+	
+	normal_distribution<double> dist_x(x, std[0]);
+	normal_distribution<double> dist_x(y, std[1]);
+	normal_distribution<double> dist_x(theta, std_[2]);
+    weight_val = 1.0;
+	for (int i = 0; i < m; ++i){
 		double sample_x = dist_x(gen);
 		double sample_y = dist_y(gen);
 		double sample_theta = dist_theta(gen);
-		std.append[sample_x, sample_y, sample_theta ]
-
+		//std.append[sample_x, sample_y, sample_theta ]
+		
+        particles.push_back(Particle{i, sample_x, sample_y, sample_theta, weight_val});
+        weights.push_back(weight_val);
 	}
-return std;
+	is_initialized = true;
 }
 
 void ParticleFilter::prediction(double delta_t, double std_pos[], double velocity, double yaw_rate) {
@@ -50,19 +49,29 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	//  http://www.cplusplus.com/reference/random/default_random_engine/
 	
 
-	//x_init = 102
-	//y_init= 65
-	//theta_init= (5*PI)/8
-	//v=110
-	//phai = PI/8
-	//dt=0.1
+	/*
+	// This is th'e main equation th'at Ive translated from C++ to Pyth'on'
+	x_init = 102
+	y_init= 65
+	theta_init= (5*PI)/8
+	v=110
+	phai = PI/8
+	dt=0.1
 	
 	div = velocity/ yaw_rate;
 	x_f = x_init + div*(math.sin(theta_init + phai*dt)- math.sin(theta_init)); 
 	y_f = y_init + div*(math.cos(theta_init) - math.cos(theta_init + phai*dt)); 
 	phai_f = theta_init+phai*dt; 
+	*/
+	double dt = delta_t;
+	if (yaw_rate <0.001){
+		cout<<
+	} else
+	{
+
+	}
+
 	
- 
 }
 
 void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::vector<LandmarkObs>& observations) {
