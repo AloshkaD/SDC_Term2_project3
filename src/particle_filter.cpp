@@ -64,14 +64,13 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	phai_f = theta_init+phai*dt; 
 	*/
 	double dt = delta_t;
-	if (yaw_rate <0.001){
-		cout<<
-	} else
-	{
+	if (fabs(yaw_rate) <0.001){
+		yaw_rate = 1.0;
+	} 
 
-	}
-
-	
+		vdt = velocity * dt;
+		ydt = yaw_rate * dt;
+        
 }
 
 void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::vector<LandmarkObs>& observations) {
