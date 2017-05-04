@@ -27,8 +27,8 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 	std_theta = 0.05;
 	
 	normal_distribution<double> dist_x(x, std[0]);
-	normal_distribution<double> dist_x(y, std[1]);
-	normal_distribution<double> dist_x(theta, std_[2]);
+	normal_distribution<double> dist_y(y, std[1]);
+	normal_distribution<double> dist_theta(theta, std[2]);
     weight_val = 1.0;
 	for (int i = 0; i < m; ++i){
 		double sample_x = dist_x(gen);
@@ -65,12 +65,40 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	*/
 	double dt = delta_t;
 	if (fabs(yaw_rate) <0.001){
-		yaw_rate = 1.0;
-	} 
+		rotation = 0; ///avoid division by zero
+	} else {
+		rotation = velocity/ yaw_rate;
+	}
 
 		vdt = velocity * dt;
 		ydt = yaw_rate * dt;
-        
+    transform(
+            particles.begin(), particles.end(),
+			particles.begin(),
+			[gen, std_pos, dt, rotation, ydt, vdt] (Particle p){
+			
+			if (fabs(yaw_rate) > 0.001){
+				double theta = p.theta + ydt,
+				//x_f = x_init + div*(math.sin(theta_init + phai*dt)- math.sin(theta_init)); 
+				
+					x = p.x + rotation * (sin(theta) - sin(p.theta)), 
+				//y_f = y_init + div*(math.cos(theta_init) - math.cos(theta_init + phai*d
+					y = p.y + rotation * (cos(p.theta) - cos(theta));	
+			}
+			else {
+				double theta = p.theta + ydt,
+					x = p.x + vdt * cos (p.theta),
+					y = p.y + vdt * sin (p.theta);
+			}
+				normal_distribution<double> dist_x(x, std_pos[0]);
+				normal_distribution<double> dist_y(y, std_pos[1]);
+				normal_distribution<double> dist_theta(theta, std_pos[2]);
+
+				return Particle {p.id, dist_x(gen),dist_y(gen),dist_theta(gen),p.weight };
+
+			}
+
+	);   
 }
 
 void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::vector<LandmarkObs>& observations) {
